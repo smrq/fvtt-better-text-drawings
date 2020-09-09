@@ -21,6 +21,7 @@ Hooks.on('setup', () => {
 		const isText = drawing_data.type === CONST.DRAWING_TYPES.TEXT;
 
 		let result = {
+			dropShadow     : true,
 			textAlignment  : isText ? "left" : "center", // see foundry.js Drawing.prototype._createText
 			textStrokeColor: DEFAULT_STROKE_COLOR,
 			textStrokeWidth: DEFAULT_STROKE_WIDTH,
@@ -30,7 +31,7 @@ Hooks.on('setup', () => {
 		if(drawing_data.flags && drawing_data.flags[MODULE_ID]) {
 			let flags = drawing_data.flags[MODULE_ID];
 
-			for(let flag of ['textAlignment', 'textStrokeColor', 'textStrokeWidth']) {
+			for(let flag of ['dropShadow', 'textAlignment', 'textStrokeColor', 'textStrokeWidth']) {
 				let newValue = flags[flag];
 
 				if(typeof newValue !== 'undefined' && newValue != result[flag]) {
@@ -79,6 +80,11 @@ Hooks.on('setup', () => {
 				<input class="color" type="text" name="flags.${MODULE_ID}.textStrokeColor" value="${values.textStrokeColor}" data-dtype="String"/>
 				<input type="color" value="${values.textStrokeColor}" data-edit="flags.${MODULE_ID}.textStrokeColor"/>
 			</div>
+
+			<div class="form-group">
+				<label for="flags.${MODULE_ID}.dropShadow">Drop Shadow</label>
+				<input type="checkbox" name="flags.${MODULE_ID}.dropShadow" data-dtype="Boolean">
+			</div>
 		`).appendTo(textTab);
 	});
 
@@ -107,7 +113,7 @@ Hooks.on('setup', () => {
 		  fill: this.data.textColor || "#FFFFFF",
 		  stroke: values.textStrokeColor,
 		  strokeThickness: values.textStrokeWidth,
-		  dropShadow: true,
+		  dropShadow: values.dropShadow,
 		  dropShadowColor: "#000000",
 		  dropShadowBlur: Math.max(Math.round(this.data.fontSize / 16), 2),
 		  dropShadowAngle: 0,
